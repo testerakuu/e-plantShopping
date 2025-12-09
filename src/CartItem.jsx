@@ -7,29 +7,54 @@ const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
-  // Calculate total amount for all products in the cart
-  const calculateTotalAmount = () => {
- 
-  };
-
-  const handleContinueShopping = (e) => {
-   
-  };
-
-
-
-  const handleIncrement = (item) => {
-  };
-
-  const handleDecrement = (item) => {
-   
-  };
-
-  const handleRemove = (item) => {
-  };
-
-  // Calculate total cost based on quantity for an item
+  // Item subtotal
   const calculateTotalCost = (item) => {
+    const unitPrice = parseFloat(item.cost.substring(1));
+    return (unitPrice * item.quantity).toFixed(2);
+  };
+  
+  // Total cost of all items in cart
+  const calculateTotalAmount = () => {
+    let total = 0;
+    
+    cart.forEach((item) => {
+      const quantity = item.quantity;
+      const cost = parseFloat(item.cost.substring(1));
+      
+      total += quantity * cost;
+    });
+    
+    return total.toFixed(2);
+  };
+
+  // Continue shopping function
+  const handleContinueShopping = (e) => {
+    onContinueShopping(e);
+  };
+
+  // Checkout function
+  const handleCheckoutShopping = (e) => {
+    alert('Functionality to be added for future reference');
+  };
+
+  // Increment item quantity
+  const handleIncrement = (item) => {
+    dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
+  };
+
+  // Decrement item quantity or remove item
+  const handleDecrement = (item) => {
+    if (item.quantity > 1) {
+      dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
+    } 
+    else {
+      dispatch(removeItem(item.name));
+    }
+  };
+
+  // Remove item from cart
+  const handleRemove = (item) => {
+    dispatch(removeItem(item.name));
   };
 
   return (
@@ -57,7 +82,7 @@ const CartItem = ({ onContinueShopping }) => {
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={(e) => handleCheckoutShopping(e)}>Checkout</button>
       </div>
     </div>
   );

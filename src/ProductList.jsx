@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
-// Redux imports required for the provided handleAddToCart logic:
 import { addItem } from './CartSlice'; 
 import { useDispatch } from 'react-redux';
 
@@ -11,10 +10,10 @@ function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); 
 
-    // State to track which products have been added to the cart
     const [addedToCart, setAddedToCart] = useState({});
 
     const plantsArray = [
+        // ... (plantsArray content remains the same) ...
         {
             category: "Air Purifying Plants",
             plants: [
@@ -24,6 +23,7 @@ function ProductList({ onHomeClick }) {
                     description: "Produces oxygen at night, improving air quality.",
                     cost: "$15"
                 },
+                // ... (other plants) ...
                 {
                     name: "Spider Plant",
                     image: "https://cdn.pixabay.com/photo/2018/07/11/06/47/chlorophytum-3530413_1280.jpg",
@@ -264,10 +264,8 @@ function ProductList({ onHomeClick }) {
     };
 
     const handleAddToCart = (product) => {
-      // Dispatch action to add product to the cart (Redux)
       dispatch(addItem(product)); 
     
-      // Update local state to mark product as added
       setAddedToCart((prevState) => ({ 
         ...prevState, 
         [product.name]: true, 
@@ -276,6 +274,7 @@ function ProductList({ onHomeClick }) {
 
     return (
         <div>
+            {/* ... (Navigation Bar JSX remains the same) ... */}
             <div className="navbar" style={styleObj}>
                 <div className="tag">
                     <div className="luxury">
@@ -296,14 +295,12 @@ function ProductList({ onHomeClick }) {
             </div>
             {!showCart ? (
                 <div className="product-grid">
-                    {/* Loop through each category in plantsArray */}
                     {plantsArray.map((category, index) => ( 
                         <div key={index}> 
                             <h1>
                                 <div>{category.category}</div> 
                             </h1>
                             <div className="product-list"> 
-                                {/* Loop through each plant in the current category */}
                                 {category.plants.map((plant, plantIndex) => ( 
                                     <div className="product-card" key={plantIndex}> 
                                         <img 
@@ -317,8 +314,11 @@ function ProductList({ onHomeClick }) {
                                         <button
                                             className="product-button"
                                             onClick={() => handleAddToCart(plant)} 
+                                            // FIX 1: Disable button if item is in addedToCart state
+                                            disabled={addedToCart[plant.name]} 
                                         >
-                                            Add to Cart
+                                            {/* FIX 1: Change button text based on state */}
+                                            {addedToCart[plant.name] ? 'Added!' : 'Add to Cart'}
                                         </button>
                                     </div>
                                 ))}
